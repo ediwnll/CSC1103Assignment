@@ -126,7 +126,7 @@ int check_winner(char player_sign)
     }
     // check for a winner in diagonal
     else if (board[0][0] == player_sign && board[1][1] == player_sign && board[2][2] == player_sign ||
-             board[0][2] == player_sign && board[1][1] == player_sign && board[2][0])
+             board[0][2] == player_sign && board[1][1] == player_sign && board[2][0] == player_sign)
     {
         return 1;
     }
