@@ -379,35 +379,6 @@ void handle_computer_move()
         printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
         handle_player_move(computer_row, computer_col);
     }
-    // if (bestMove != -1)
-    // {
-    //     int computer_row = bestMove / 3;
-    //     int computer_col = bestMove % 3;
-    //     gameBoard[computer_row][computer_col] = 2; // Computer move
-    //     update_game_grid();
-    //     int result = check_winner();
-
-    //     if (result == 1)
-    //     {
-    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "Player X wins!");
-    //         disable_game_buttons();
-    //     }
-    //     else if (result == 2)
-    //     {
-    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "Player O wins!");
-    //         disable_game_buttons();
-    //     }
-    //     else if (result == -1)
-    //     {
-    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "It's a Tie!");
-    //     }
-    //     else
-    //     {
-    //         // Toggle current player
-    //         currentPlayer = 1 - currentPlayer;
-    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), (currentPlayer == 0) ? "Player X turn" : "Player O turn");
-    //     }
-    // }
 }
 
 // Handle grid
