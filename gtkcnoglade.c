@@ -1,4 +1,6 @@
 #include <gtk/gtk.h>
+#include <stdio.h>
+#include <math.h>
 
 // Global Variables
 GtkWidget *mainwindow;
@@ -12,23 +14,23 @@ GtkWidget *hardbutton;
 GtkWidget *gamelabel;
 GtkWidget *gamemodelabel;
 GtkWidget *difficultylabel;
-GtkWidget *gameGrid[3][3];
-int gamemode = 0; // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
+GtkWidget *gameGrid[3][3]; // the buttons for tic tac toe
+int gamemode = 0;          // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
 int currentPlayer;
 int gameBoard[3][3];
 
 // function prototypes
-void create_mainwindow(); // creates the main window
-void create_gamewindow(); // creates the game window for tictactoe
-void two_players_button_clicked(GtkButton *button, gpointer user_data);
-void one_player_button_clicked(GtkButton *button, gpointer user_data);
-void difficulty_button_clicked(GtkWidget *button, gpointer user_data);
-void reset_game();
-void handle_grid_button(GtkButton *button, gpointer user_data);
+void create_mainwindow();                                               // creates the main window
+void create_gamewindow();                                               // creates the game window for tictactoe
+void two_players_button_clicked(GtkButton *button, gpointer user_data); // main window two player button clicked
+void one_player_button_clicked(GtkButton *button, gpointer user_data);  // main window singleplayer button clicked
+void difficulty_button_clicked(GtkWidget *button, gpointer user_data);  // singelplayer window choose difficulty
+void reset_game();                                                      // set gameBoard to empty and current player back to X
+void handle_grid_button(GtkButton *button, gpointer user_data);         // allows the grid button to change label to X or O base on current player
 void update_game_grid();
 void back_button_clicked(GtkButton *button, gpointer user_data);
 int check_winner();
-void disable_game_buttons();
+void disable_game_buttons(); // disable all game buttons when game is over
 void create_difficultywindow();
 
 void create_difficultywindow()
@@ -114,18 +116,6 @@ void create_gamewindow()
 
     GtkWidget *grid = gtk_grid_new();
 
-    // create 3x3 grid for tic tac toe
-    for (int row = 0; row < 3; row++)
-    {
-        for (int col = 0; col < 3; col++)
-        {
-            gameGrid[row][col] = gtk_button_new();
-            gtk_widget_set_size_request(gameGrid[row][col], 60, 60); // set button size
-            gtk_grid_attach(GTK_GRID(grid), gameGrid[row][col], col, row, 1, 1);
-            g_signal_connect(gameGrid[row][col], "clicked", G_CALLBACK(handle_grid_button), GINT_TO_POINTER(row * 3 + col));
-        }
-    }
-
     GtkWidget *gameVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_container_add(GTK_CONTAINER(gamewindow), gameVBox);
 
@@ -145,15 +135,17 @@ void create_gamewindow()
     // add grid to gameVbox
     gtk_box_pack_start(GTK_BOX(gameVBox), grid, TRUE, TRUE, 0);
 
-    // Init game variables
-    currentPlayer = 0;
-    for (int i = 0; i < 3; i++)
+    for (int row = 0; row < 3; row++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int col = 0; col < 3; col++)
         {
-            gameBoard[i][j] = 0;
+            gameGrid[row][col] = gtk_button_new();
+            gtk_widget_set_size_request(gameGrid[row][col], 60, 60); // set button size
+            gtk_grid_attach(GTK_GRID(grid), gameGrid[row][col], col, row, 1, 1);
+            g_signal_connect(gameGrid[row][col], "clicked", G_CALLBACK(handle_grid_button), GINT_TO_POINTER(row * 3 + col));
         }
     }
+
     gtk_widget_show_all(gamewindow);
     gtk_widget_hide(gamewindow);
 }
@@ -163,9 +155,77 @@ void back_button_clicked(GtkButton *button, gpointer user_data)
 {
     gtk_widget_hide(gamewindow);
     gtk_widget_show(mainwindow);
-    reset_game();
     gamemode = 0;
+    reset_game();
     gtk_label_set_text(GTK_LABEL(gamemodelabel), "Game Label");
+}
+
+// Single Player GameMode
+// Minimax Algorithm
+int minimax(int depth, int isMax, int alpha, int beta)
+{
+    int score = check_winner();
+    if (score == -1)
+    {
+        return 0;
+    }
+    else if (score != 0)
+    {
+        if (score == 1)
+        {
+            return -1;
+        }
+        if (score == 2)
+        {
+            return 1;
+        }
+    }
+    if (isMax)
+    {
+        int max_val = -1000;
+        // run through every cell on board
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                if (gameBoard[row][col] == 0)
+                {
+                    gameBoard[row][col] = 2; // Assume AI made a move
+                    max_val = fmax(max_val, minimax(depth + 1, !isMax, alpha, beta));
+                    alpha = fmax(alpha, max_val);
+                    gameBoard[row][col] = 0; // Undo move
+
+                    if (beta <= alpha)
+                    {
+                        break; // Prune the remaining branches
+                    }
+                }
+            }
+        }
+        return max_val;
+    }
+    else
+    {
+        int min_val = 1000;
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                if (gameBoard[row][col] == 0)
+                {
+                    gameBoard[row][col] = 1; // Assume player made a move
+                    min_val = fmin(min_val, minimax(depth + 1, !isMax, alpha, beta));
+                    beta = fmin(beta, min_val);
+                    gameBoard[row][col] = 0; // Undo move
+                    if (beta <= alpha)
+                    {
+                        break; // Prune remaining branches
+                    }
+                }
+            }
+        }
+        return min_val;
+    }
 }
 
 // Two Player GameMode
@@ -217,7 +277,7 @@ int check_winner()
         {
             if (gameBoard[i][j] == 0)
             {
-                is_draw = 0; // There are empty cells, not a draw
+                is_draw = 0; // There are empty cells, not a draw, break out of the loop and continue to return.
                 break;
             }
         }
@@ -263,7 +323,7 @@ void handle_player_move(int row, int col)
     if (gameBoard[row][col] == 0)
     {
         gameBoard[row][col] = currentPlayer + 1;
-        printf("gameBoard[row][col] = %d\n", gameBoard[row][col]);
+        // printf("gameBoard[row][col] = %d\n", gameBoard[row][col]);
         update_game_grid();
         int result = check_winner();
         if (result == 1)
@@ -289,15 +349,88 @@ void handle_player_move(int row, int col)
     }
 }
 
+// Computer Move
+void handle_computer_move()
+{
+    int bestMove = -1;
+    int bestVal = -1000;
+    // loop through all cells
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 3; col++)
+        {
+            if (gameBoard[row][col] == 0)
+            {
+                gameBoard[row][col] = 2; // Computer move
+                int moveVal = minimax(0, 0, -1000, 1000);
+                gameBoard[row][col] = 0; // remove
+                if (moveVal > bestVal)
+                {
+                    bestVal = moveVal;
+                    bestMove = row * 3 + col;
+                }
+            }
+        }
+    }
+    if (bestMove != -1)
+    {
+        int computer_row = bestMove / 3;
+        int computer_col = bestMove % 3;
+        printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
+        handle_player_move(computer_row, computer_col);
+    }
+    // if (bestMove != -1)
+    // {
+    //     int computer_row = bestMove / 3;
+    //     int computer_col = bestMove % 3;
+    //     gameBoard[computer_row][computer_col] = 2; // Computer move
+    //     update_game_grid();
+    //     int result = check_winner();
+
+    //     if (result == 1)
+    //     {
+    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "Player X wins!");
+    //         disable_game_buttons();
+    //     }
+    //     else if (result == 2)
+    //     {
+    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "Player O wins!");
+    //         disable_game_buttons();
+    //     }
+    //     else if (result == -1)
+    //     {
+    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), "It's a Tie!");
+    //     }
+    //     else
+    //     {
+    //         // Toggle current player
+    //         currentPlayer = 1 - currentPlayer;
+    //         gtk_label_set_text(GTK_LABEL(gamemodelabel), (currentPlayer == 0) ? "Player X turn" : "Player O turn");
+    //     }
+    // }
+}
+
 // Handle grid
 void handle_grid_button(GtkButton *button, gpointer user_data)
 {
     int position = GPOINTER_TO_INT(user_data);
-    printf("position: %d\n", position);
+    // printf("position: %d\n", position);
     int row = position / 3;
     int col = position % 3;
-    printf("row: %d, col: %d\n", row, col);
-    handle_player_move(row, col);
+    // printf("row: %d, col: %d\n", row, col);
+
+    if (gamemode == 1)
+    {
+        handle_player_move(row, col);
+    }
+    else if (gamemode == 4)
+    {
+        handle_player_move(row, col);
+        if (check_winner() == 0)
+        {
+            handle_computer_move();
+        }
+    }
 }
 
 // Disable game buttons
@@ -388,7 +521,7 @@ void difficulty_button_clicked(GtkWidget *button, gpointer user_data)
     if (button == easybutton)
     {
         gamemode = 2;
-        printf("gamemode = %d\n", gamemode);
+        // printf("gamemode = %d\n", gamemode);
     }
     else if (button == mediumbutton)
     {
