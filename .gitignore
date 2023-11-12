@@ -42,6 +42,11 @@
 *.idb
 *.pdb
 
+#Datafile
+tic-tac-toe.data
+tic-tac-toe.names
+
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
