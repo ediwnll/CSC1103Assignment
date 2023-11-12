@@ -36,7 +36,7 @@ void setup(char *array[]){
     fclose(MLfile);
 }
 
-void populateData(char* dataSet[],char* trainingSet[766][8],char* testSet[192][8], char* outcome[958]){
+void populateData(char* dataSet[],char* trainingSet[][8],char* testSet[][8], char* outcome[]){
 
     int trainingRow = winStrategy * 0.8;
    
@@ -60,6 +60,7 @@ void populateData(char* dataSet[],char* trainingSet[766][8],char* testSet[192][8
             value = strtok(NULL, ",");
         }        
     }
+    free(dataSet);
 }
 
 void main(){
@@ -68,8 +69,8 @@ void main(){
     char* dataSet[winStrategy];
     int trainingSetSize = (winStrategy * 80 / 100);
     
-    char* trainingSet[766][8];
-    char* testSet[192][8];
+    char* trainingSet[trainingSetSize][8];
+    char* testSet[winStrategy-trainingSetSize][8];
     char* outcome[winStrategy];    
 
     setup(dataSet);
