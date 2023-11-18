@@ -3,21 +3,21 @@
 #include <math.h>
 
 // Global Variables
-extern GtkWidget *mainwindow;
-extern GtkWidget *gamewindow;
-extern GtkWidget *difficultywindow;
-extern GtkWidget *singlePlayerButton;
-extern GtkWidget *twoPlayersButton;
-extern GtkWidget *easybutton;
-extern GtkWidget *mediumbutton;
-extern GtkWidget *hardbutton;
-extern GtkWidget *gamelabel;
-extern GtkWidget *gamemodelabel;
-extern GtkWidget *difficultylabel;
-extern GtkWidget *gameGrid[3][3]; // the buttons for tic tac toe
-extern int gamemode;              // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
-extern int currentPlayer;
-extern int gameBoard[3][3];
+GtkWidget *mainwindow;
+GtkWidget *gamewindow;
+GtkWidget *difficultywindow;
+GtkWidget *singlePlayerButton;
+GtkWidget *twoPlayersButton;
+GtkWidget *easybutton;
+GtkWidget *mediumbutton;
+GtkWidget *hardbutton;
+GtkWidget *gamelabel;
+GtkWidget *gamemodelabel;
+GtkWidget *difficultylabel;
+GtkWidget *gameGrid[3][3]; // the buttons for tic tac toe
+int gamemode = 0;          // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
+int currentPlayer;
+int gameBoard[3][3];
 
 // function prototypes
 void create_mainwindow();                                               // creates the main window
