@@ -178,16 +178,16 @@ void difficulty_button_clicked(GtkWidget *button, gpointer user_data)
     // Set the global gamemode variable based on the button clicked
     if (button == easybutton)
     {
-        gamemode = 2;
+        gamemode = EASY;
         // printf("gamemode = %d\n", gamemode);
     }
     else if (button == mediumbutton)
     {
-        gamemode = 3;
+        gamemode = MEDIUM;
     }
     else if (button == hardbutton)
     {
-        gamemode = 4;
+        gamemode = HARD;
     }
 }
 
@@ -202,7 +202,7 @@ void two_players_button_clicked(GtkButton *button, gpointer user_data)
     gtk_widget_hide(mainwindow);
     gtk_widget_show(gamewindow);
     gtk_label_set_text(GTK_LABEL(gamemodelabel), "Two Players");
-    gamemode = 1;
+    gamemode = TWOPLAYERS;
 }
 
 void back_button_clicked(GtkButton *button, gpointer user_data)

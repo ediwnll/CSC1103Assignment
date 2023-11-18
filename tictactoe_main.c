@@ -12,10 +12,10 @@ GtkWidget *hardbutton;
 GtkWidget *gamelabel;
 GtkWidget *gamemodelabel;
 GtkWidget *difficultylabel;
-GtkWidget *gameGrid[3][3]; // the buttons for tic tac toe
-int gamemode = 0;          // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
+GtkWidget *gameGrid[SIZE][SIZE]; // the buttons for tic tac toe
+int gamemode = 0;                // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
 int currentPlayer;
-int gameBoard[3][3];
+int gameBoard[SIZE][SIZE];
 
 int main(int argc, char *argv[])
 {

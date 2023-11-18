@@ -21,29 +21,29 @@ void handle_grid_button(GtkButton *button, gpointer user_data)
 {
     int position = GPOINTER_TO_INT(user_data);
     // printf("position: %d\n", position);
-    int row = position / 3;
-    int col = position % 3;
+    int row = position / SIZE;
+    int col = position % SIZE;
     // printf("row: %d, col: %d\n", row, col);
 
-    if (gamemode == 1)
+    if (gamemode == TWOPLAYERS)
     {
         handle_player_move(row, col);
     }
-    else if (gamemode == 4)
+    else if (gamemode == EASY || gamemode == HARD)
     {
         handle_player_move(row, col);
         if (check_winner() == 0)
         {
-            handle_computer_move();
+            minimax_move();
         }
     }
 }
 
 void update_game_grid()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             GtkWidget *button = gameGrid[i][j];
             if (gameBoard[i][j] == 1)
@@ -67,7 +67,7 @@ void update_game_grid()
 
 int check_winner()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         // check row
         if (gameBoard[i][0] != 0 && gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2])
@@ -91,9 +91,9 @@ int check_winner()
     }
     // Check for a draw
     int is_draw = 1;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             if (gameBoard[i][j] == 0)
             {
@@ -112,9 +112,9 @@ int check_winner()
 
 void disable_game_buttons()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < SIZE; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < SIZE; j++)
         {
             gtk_widget_set_sensitive(gameGrid[i][j], FALSE);
         }

@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 
+// Global Definitions
+#define SIZE 3
+#define PLAYER 1
+#define COMPUTER 2
+#define TWOPLAYERS 1
+#define EASY 2
+#define MEDIUM 3
+#define HARD 4
+
 // Global Variables
 extern GtkWidget *mainwindow;
 extern GtkWidget *gamewindow;
@@ -13,10 +22,10 @@ extern GtkWidget *hardbutton;
 extern GtkWidget *gamelabel;
 extern GtkWidget *gamemodelabel;
 extern GtkWidget *difficultylabel;
-extern GtkWidget *gameGrid[3][3]; // the buttons for tic tac toe
-extern int gamemode;        // twoplayer = 1, singleplayer easy = 2, medium = 3,  hard = 4
+extern GtkWidget *gameGrid[SIZE][SIZE]; // the buttons for tic tac toe
+extern int gamemode;
 extern int currentPlayer;
-extern int gameBoard[3][3];
+extern int gameBoard[SIZE][SIZE];
 
 // function prototypes
 void create_mainwindow();                                               // creates the main window
@@ -33,7 +42,7 @@ void disable_game_buttons(); // disable all game buttons when game is over
 void create_difficultywindow();
 int minimax(int depth, int isMax, int alpha, int beta);
 void handle_player_move(int row, int col);
-void handle_computer_move();
+void minimax_move();
 
 /*
 gui.c functions

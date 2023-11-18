@@ -3,37 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 
-void handle_computer_move()
-{
-    int bestMove = -1;
-    int bestVal = -1000;
-    // loop through all cells
-    for (int row = 0; row < 3; row++)
-    {
-        for (int col = 0; col < 3; col++)
-        {
-            if (gameBoard[row][col] == 0)
-            {
-                gameBoard[row][col] = 2; // Computer move
-                int moveVal = minimax(0, 0, -1000, 1000);
-                gameBoard[row][col] = 0; // remove
-                if (moveVal > bestVal)
-                {
-                    bestVal = moveVal;
-                    bestMove = row * 3 + col;
-                }
-            }
-        }
-    }
-    if (bestMove != -1)
-    {
-        int computer_row = bestMove / 3;
-        int computer_col = bestMove % 3;
-        printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
-        handle_player_move(computer_row, computer_col);
-    }
-}
-
+// Minimax Algorithm
 int minimax(int depth, int isMax, int alpha, int beta)
 {
     int score = check_winner();
@@ -52,17 +22,18 @@ int minimax(int depth, int isMax, int alpha, int beta)
             return 1;
         }
     }
+
     if (isMax)
     {
         int max_val = -1000;
         // run through every cell on board
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < SIZE; row++)
         {
-            for (int col = 0; col < 3; col++)
+            for (int col = 0; col < SIZE; col++)
             {
                 if (gameBoard[row][col] == 0)
                 {
-                    gameBoard[row][col] = 2; // Assume AI made a move
+                    gameBoard[row][col] = COMPUTER; // Assume AI made a move
                     max_val = fmax(max_val, minimax(depth + 1, !isMax, alpha, beta));
                     alpha = fmax(alpha, max_val);
                     gameBoard[row][col] = 0; // Undo move
@@ -79,13 +50,13 @@ int minimax(int depth, int isMax, int alpha, int beta)
     else
     {
         int min_val = 1000;
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < SIZE; row++)
         {
-            for (int col = 0; col < 3; col++)
+            for (int col = 0; col < SIZE; col++)
             {
                 if (gameBoard[row][col] == 0)
                 {
-                    gameBoard[row][col] = 1; // Assume player made a move
+                    gameBoard[row][col] = PLAYER; // Assume player made a move
                     min_val = fmin(min_val, minimax(depth + 1, !isMax, alpha, beta));
                     beta = fmin(beta, min_val);
                     gameBoard[row][col] = 0; // Undo move
@@ -97,5 +68,52 @@ int minimax(int depth, int isMax, int alpha, int beta)
             }
         }
         return min_val;
+    }
+}
+
+void minimax_move()
+{
+    int bestMove = -1;
+    int bestVal = -1000;
+    // loop through all cells
+    for (int row = 0; row < SIZE; row++)
+    {
+        for (int col = 0; col < SIZE; col++)
+        {
+            if (gameBoard[row][col] == 0)
+            {
+                gameBoard[row][col] = COMPUTER; // Computer move
+                int moveVal = minimax(0, 0, -1000, 1000);
+                gameBoard[row][col] = 0; // Clear the cell
+                if (moveVal > bestVal)
+                {
+                    bestVal = moveVal;
+                    bestMove = row * SIZE + col;
+                }
+            }
+        }
+    }
+
+    if (bestMove != -1)
+    {
+        int computer_row = bestMove / SIZE;
+        int computer_col = bestMove % SIZE;
+        if (gamemode == EASY)
+        {
+            // Introduce randomness to make an imperfect move
+            if (rand() % 3 == 0)
+            {
+                int randomMove;
+                do
+                {
+                    randomMove = rand() % (SIZE * SIZE);
+                    printf("%d\n", randomMove);
+                } while (gameBoard[randomMove / SIZE][randomMove % SIZE] != 0);
+                computer_row = randomMove / SIZE;
+                computer_col = randomMove % SIZE;
+            }
+        }
+        printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
+        handle_player_move(computer_row, computer_col);
     }
 }
