@@ -30,6 +30,7 @@ void back_button_clicked(GtkButton *button, gpointer user_data);
 int check_winner();
 void disable_game_buttons();
 void create_difficultywindow();
+int minimax(int depth, int isMax, int alpha, int beta);
 
 void create_difficultywindow()
 {
