@@ -1,22 +1,27 @@
 CC = gcc
 CFLAGS = -Wall -g
-LIBS = `pkg-config --cflags --libs gtk+-3.0`
-
-# Separate variables for compilation and linking flags
-GTK_CFLAGS = `pkg-config --cflags gtk+-3.0`
+GTK_FLAGS = `pkg-config --cflags gtk+-3.0`
 GTK_LIBS = `pkg-config --libs gtk+-3.0`
 
 SRC = tictactoe_main.c tictactoe_gui.c tictactoe_gameops.c tictactoe_minimax.c tictactoe_twoplayers.c
 OBJ = $(SRC:.c=.o)
 TARGET = tictactoe
 
-all: $(TARGET)
+ifeq ($(OS),Windows_NT)
+    TARGET_EXTENSION = .exe
+    RM = del
+else
+    TARGET_EXTENSION =
+    RM = rm -f
+endif
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(GTK_LIBS)
+all: $(TARGET)$(TARGET_EXTENSION)
+
+$(TARGET)$(TARGET_EXTENSION): $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET)$(TARGET_EXTENSION) $(OBJ) $(GTK_LIBS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(GTK_CFLAGS)
+	$(CC) $(CFLAGS) -c $< -o $@ $(GTK_FLAGS)
 
 clean:
-	rm -f $(OBJ)
+	$(RM) $(OBJ)
