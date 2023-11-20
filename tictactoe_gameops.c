@@ -46,21 +46,42 @@ void update_game_grid()
         for (int j = 0; j < SIZE; j++)
         {
             GtkWidget *button = gameGrid[i][j];
+
+            char button_id[20];
+            snprintf(button_id, sizeof(button_id), "button_%d_%d", i, j);
+            gtk_widget_set_name(button, button_id);
+            GtkStyleContext *context = gtk_widget_get_style_context(button);
+            gtk_style_context_remove_class(context, "button");
+            gtk_style_context_remove_class(context, "x_button");
+            gtk_style_context_remove_class(context, "o_button");
+
             if (gameBoard[i][j] == 1)
             {
                 gtk_button_set_label(GTK_BUTTON(button), "X");
                 gtk_widget_set_sensitive(button, FALSE);
+                // Set a class for X buttons
+                GtkStyleContext *context = gtk_widget_get_style_context(button);
+                gtk_style_context_add_class(context, "x_button");
             }
             else if (gameBoard[i][j] == 2)
             {
                 gtk_button_set_label(GTK_BUTTON(button), "O");
                 gtk_widget_set_sensitive(button, FALSE);
+                // Set a class for O buttons
+                GtkStyleContext *context = gtk_widget_get_style_context(button);
+                gtk_style_context_add_class(context, "o_button");
             }
             else
             {
                 gtk_button_set_label(GTK_BUTTON(button), "");
                 gtk_widget_set_sensitive(button, TRUE);
+
+                // Remove any classes for empty buttons
+                GtkStyleContext *context = gtk_widget_get_style_context(button);
+                gtk_style_context_add_class(context, "button");
             }
+            // Debugging print statement
+            // g_print("Button at row %d, col %d has ID: %s, Label: %s\n", i, j, button, gtk_button_get_label(GTK_BUTTON(button)));
         }
     }
 }

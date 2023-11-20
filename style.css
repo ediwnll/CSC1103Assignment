@@ -1,0 +1,161 @@
+
+#gamelabel_id{
+    font-size: 72px;
+    font-family:'Comic Sans MS', 'Comic Sans', cursive;
+    font-weight: 700;
+    font-style: italic;
+    color: azure;
+}
+
+#singleplayerbutton_id,#twoplayerbutton_id{
+    font-size: 28px;
+    background: black;
+}
+
+#singleplayerbutton_id{
+    border: 3px solid blue;
+    color:blue;
+    box-shadow: 0 0 2px rgb(42, 42, 245);
+    text-shadow: 0 0 0 black;
+}
+#twoplayerbutton_id{
+    border: 3px solid red;
+    box-shadow: 0 0 2px #D30302;
+    color: red;
+    text-shadow: 0 0 0 black;
+}
+
+#singleplayerbutton_id:hover{
+    box-shadow: 
+    0 0 1px azure,
+    0 0 2px rgb(42, 42, 245),
+    0 0 4px rgb(42, 42, 245),
+    0 0 8px rgb(42, 42, 245);
+    text-shadow:
+    0 0 1px rgb(42, 42, 245),
+    0 0 2px rgb(42, 42, 245);
+    
+}
+#twoplayerbutton_id:hover{
+    box-shadow: 
+    0 0 1px azure,
+    0 0 2px #D30302,
+    0 0 4px #D30302,
+    0 0 8px #D30302;
+    text-shadow: 
+    0 0 1px azure,
+    0 0 2px #D30302,
+    0 0 4px #D30302;
+}
+
+#mainwindow_id,#gamewindow_id,#difficultywindow_id{
+    background-color:black;
+}
+
+#gamemodelabel{
+    font-size: large;
+    color: azure;
+}
+
+#gamemode_backbutton_id,#difficulty_backbutton_id{
+    font-size: 20px;
+    background: black;
+    color: red;
+    border: 3px solid #FF5161;
+    box-shadow: 0 0 2px #D30302;
+    text-shadow: 0 0 0 black;
+}
+
+#gamemode_backbutton_id:hover,#difficulty_backbutton_id:hover{
+    box-shadow: 
+    0 0 1px azure,
+    0 0 2px #D30302,
+    0 0 4px #D30302,
+    0 0 8px #D30302;
+    text-shadow: 
+    0 0 1px azure,
+    0 0 2px #D30302,
+    0 0 4px #D30302;
+}
+
+#easy_button:hover + #difficultylabel{
+    color: green;
+    
+}
+
+#difficultylabel{
+    font-size: 38px;
+    font-family:'Comic Sans MS', 'Comic Sans', cursive;
+    font-weight: 700;
+    font-style: italic;
+    color: azure;
+}
+
+#easy_button,#medium_button,#hard_button {
+    font-size: larger;
+    border: white solid;
+    border-width: 2px;
+    background: black;
+    color: azure;
+}
+
+#easy_button:hover, #medium_button:hover, #hard_button:hover{
+    text-shadow: 
+        1px 1px 2px azure,
+        1px 1px 5px azure,
+        1px 1px 10px azure,
+        1px 1px 12px azure,
+        1px 1px 12px azure,
+        1px 1px 12px azure;
+}
+
+
+.button{
+    background: black;
+    border: white solid;
+    border-width: 2px;
+    box-shadow: 
+        0 0 1px azure,
+        0 0 2px azure,
+        0 0 4px azure,
+        0 0 8px azure;
+
+
+}
+
+
+button.x_button {
+    font-size: 64px;
+    background: black;
+    color: blue;
+    border: white solid;
+    border-width: 2px;
+    box-shadow: 
+        0 0 1px azure,
+        0 0 2px azure,
+        0 0 4px azure,
+        0 0 8px azure;
+    text-shadow: 
+        0px 0px 5px blue,
+        1px 1px 10px blue;
+        
+}
+
+
+button.o_button {
+    font-size: 64px;
+    background: black;
+    color: red;
+    border: white solid;
+    border-width: 2px;
+    box-shadow: 
+        0 0 1px azure,
+        0 0 2px azure,
+        0 0 4px azure,
+        0 0 8px azure;
+    text-shadow: 
+        1px 1px 2px azure,
+        1px 1px 5px red,
+        1px 1px 10px red,
+        1px 1px 12px red;     
+}

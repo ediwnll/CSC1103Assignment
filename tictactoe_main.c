@@ -20,7 +20,8 @@ int gameBoard[SIZE][SIZE];
 int main(int argc, char *argv[])
 {
     gtk_init(&argc, &argv);
-
+    g_print("Current working directory: %s\n", g_get_current_dir());
+    load_css("style.css");
     create_mainwindow();
     create_gamewindow();
     create_difficultywindow();

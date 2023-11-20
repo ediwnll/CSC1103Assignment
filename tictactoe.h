@@ -26,6 +26,7 @@ extern GtkWidget *gameGrid[SIZE][SIZE]; // the buttons for tic tac toe
 extern int gamemode;
 extern int currentPlayer;
 extern int gameBoard[SIZE][SIZE];
+void load_css(const char *path); // css
 
 // function prototypes
 void create_mainwindow();                                               // creates the main window
