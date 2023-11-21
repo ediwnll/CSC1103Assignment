@@ -52,6 +52,7 @@ void create_mainwindow()
 
     // Connect the "destroy" signal to quit the application
     g_signal_connect(mainwindow, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    gtk_window_set_position(GTK_WINDOW(mainwindow), GTK_WIN_POS_CENTER);
 
     // Show all the widgets
     gtk_widget_show_all(mainwindow);
@@ -114,6 +115,7 @@ void create_gamewindow()
             // g_print("Button at row %d, col %d has ID: %s\n", row, col, button_id);
         }
     }
+    gtk_window_set_position(GTK_WINDOW(gamewindow), GTK_WIN_POS_CENTER);
 
     gtk_widget_show_all(gamewindow);
     gtk_widget_hide(gamewindow);
@@ -180,6 +182,7 @@ void create_difficultywindow()
     gtk_box_pack_end(GTK_BOX(gameHBox), easybutton, FALSE, FALSE, 20);
 
     gtk_widget_set_margin_bottom(gameHBox, 60);
+    gtk_window_set_position(GTK_WINDOW(difficultywindow), GTK_WIN_POS_CENTER);
 
     gtk_widget_show_all(difficultywindow);
     gtk_widget_hide(difficultywindow);
@@ -225,6 +228,7 @@ void two_players_button_clicked(GtkButton *button, gpointer user_data)
 void back_button_clicked(GtkButton *button, gpointer user_data)
 {
     gtk_widget_hide(gamewindow);
+    gtk_widget_hide(difficultywindow);
     gtk_widget_show(mainwindow);
     gamemode = 0;
     reset_game();
