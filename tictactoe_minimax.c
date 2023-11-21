@@ -89,7 +89,6 @@ int minimax(int depth, int isMax, int alpha, int beta, int isTesting)
 void minimax_move(int isTesting)
 {
     // printf("%d\t", gamemode);
-    srand(time(NULL));
     int bestMove = -1;
     int bestVal = -1000;
     // loop through all cells
@@ -99,14 +98,13 @@ void minimax_move(int isTesting)
         {
             if (gameBoard[row][col] == BLANK)
             {
-                // if (isTesting) // If testing win rate of the algorithm
-                //{
-                //     gameBoard[row][col] = PLAYER; // Player will be the maximizer
-                // }
-                // else // Else run as per normal
-                //{
+                if (isTesting) // If testing win rate of the algorithm
+                {
+                    gameBoard[row][col] = PLAYER; // Player will be the maximizer
+                }
+
                 gameBoard[row][col] = COMPUTER; // Assume AI makes a move
-                //}
+
                 int moveVal = minimax(0, 0, -1000, 1000, isTesting);
                 gameBoard[row][col] = BLANK; // Clear the cell
                 if (moveVal > bestVal)
@@ -125,7 +123,7 @@ void minimax_move(int isTesting)
         if (gamemode == MEDIUM)
         {
             // Introduce randomness to make an imperfect move
-            if (rand() % 10 == 0)
+            if (rand() % 3 == 0)
             {
                 int randomMove;
                 do

@@ -70,7 +70,7 @@ void play_multiple_games(int num_games)
     printf("\nPerfect Minimax wins: %d\n", perfectminimax_win);
     printf("Imperfect Minimax wins: %d\n", contender);
     printf("Draws: %d\n", draws);
-    winrate = (float)draws / num_games * 100;
+    winrate = (float)draws + (float)contender / num_games * 100;
     printf("Due to the fact that Perfect Minimax cannot lose, we consider draws to be the winrate\n");
     printf("Winrate: %.2f\n", winrate);
 
@@ -102,7 +102,7 @@ void play_multiple_games(int num_games)
     printf("\nPerfect Minimax wins: %d\n", perfectminimax_win);
     printf("Naive Bayes wins: %d\n", contender);
     printf("Draws: %d\n", draws);
-    winrate = (float)draws / num_games * 100;
+    winrate = (float)draws + (float)contender / num_games * 100;
     printf("Due to the fact that Perfect Minimax cannot lose, we consider draws to be the winrate\n");
     printf("Winrate: %.2f\n", winrate);
 }
