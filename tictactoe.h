@@ -23,6 +23,9 @@
 #define num_feature_sets 9
 #define num_feature 9
 
+// Number of games for winrate
+#define NUMGAME 20
+
 // Global Variables
 extern GtkWidget *mainwindow;
 extern GtkWidget *gamewindow;

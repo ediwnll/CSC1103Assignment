@@ -19,13 +19,14 @@ int gameBoard[SIZE][SIZE];
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
     gtk_init(&argc, &argv);
     g_print("Current working directory: %s\n", g_get_current_dir());
     load_css("style.css");
 
     // Initialise Naive-Bayes model
     naivebayes();
-
+    play_multiple_games(NUMGAME);
     create_mainwindow();
     create_gamewindow();
     create_difficultywindow();
