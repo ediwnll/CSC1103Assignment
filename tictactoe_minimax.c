@@ -36,7 +36,7 @@ int minimax(int depth, int isMax, int alpha, int beta)
                     gameBoard[row][col] = COMPUTER; // Assume AI made a move
                     max_val = fmax(max_val, minimax(depth + 1, !isMax, alpha, beta));
                     alpha = fmax(alpha, max_val);
-                    gameBoard[row][col] = 0; // Undo move
+                    gameBoard[row][col] = BLANK; // Undo move
 
                     if (beta <= alpha)
                     {
@@ -59,7 +59,7 @@ int minimax(int depth, int isMax, int alpha, int beta)
                     gameBoard[row][col] = PLAYER; // Assume player made a move
                     min_val = fmin(min_val, minimax(depth + 1, !isMax, alpha, beta));
                     beta = fmin(beta, min_val);
-                    gameBoard[row][col] = 0; // Undo move
+                    gameBoard[row][col] = BLANK; // Undo move
                     if (beta <= alpha)
                     {
                         break; // Prune remaining branches
@@ -84,7 +84,7 @@ void minimax_move()
             {
                 gameBoard[row][col] = COMPUTER; // Computer move
                 int moveVal = minimax(0, 0, -1000, 1000);
-                gameBoard[row][col] = 0; // Clear the cell
+                gameBoard[row][col] = BLANK; // Clear the cell
                 if (moveVal > bestVal)
                 {
                     bestVal = moveVal;
@@ -107,13 +107,12 @@ void minimax_move()
                 do
                 {
                     randomMove = rand() % (SIZE * SIZE);
-                    printf("%d\n", randomMove);
                 } while (gameBoard[randomMove / SIZE][randomMove % SIZE] != 0);
                 computer_row = randomMove / SIZE;
                 computer_col = randomMove % SIZE;
             }
         }
-        printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
+        // printf("computer_row = %d, computer_col = %d\n", computer_row, computer_col);
         handle_player_move(computer_row, computer_col);
     }
 }

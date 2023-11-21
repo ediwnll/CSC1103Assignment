@@ -37,6 +37,14 @@ void handle_grid_button(GtkButton *button, gpointer user_data)
             minimax_move();
         }
     }
+    else if (gamemode == MEDIUM)
+    {
+        handle_player_move(row, col);
+        if (check_winner() == 0)
+        {
+            naivebayes_move();
+        }
+    }
 }
 
 void update_game_grid()

@@ -1,14 +1,27 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <time.h>
 #include <gtk/gtk.h>
 
-// Global Definitions
+// Board Definitions
 #define SIZE 3
 #define PLAYER 1
 #define COMPUTER 2
+#define BLANK 0
+
+// Difficulty definitions
 #define TWOPLAYERS 1
 #define EASY 2
 #define MEDIUM 3
 #define HARD 4
+
+// ML Definitions
+#define winStrategy 958
+#define maxCol 10
+#define num_feature_sets 9
+#define num_feature 9
 
 // Global Variables
 extern GtkWidget *mainwindow;
@@ -28,12 +41,26 @@ extern int currentPlayer;
 extern int gameBoard[SIZE][SIZE];
 void load_css(const char *path); // css
 
+// ML Variables
+typedef struct
+{
+    double positive;
+    double negative;
+} PossibilityLabel;
+typedef struct
+{
+    char position[2];
+    PossibilityLabel *possibility;
+} Feature;
+extern Feature **possibilityAtt;
+extern PossibilityLabel *possibilityLabel;
+
 // function prototypes
 void create_mainwindow();                                               // creates the main window
 void create_gamewindow();                                               // creates the game window for tictactoe
 void two_players_button_clicked(GtkButton *button, gpointer user_data); // main window two player button clicked
 void one_player_button_clicked(GtkButton *button, gpointer user_data);  // main window singleplayer button clicked
-void difficulty_button_clicked(GtkWidget *button, gpointer user_data);  // singelplayer window choose difficulty
+void difficulty_button_clicked(GtkWidget *button, gpointer user_data);  // singleplayer window choose difficulty
 void reset_game();                                                      // set gameBoard to empty and current player back to X
 void handle_grid_button(GtkButton *button, gpointer user_data);         // allows the grid button to change label to X or O base on current player
 void update_game_grid();
@@ -45,6 +72,21 @@ int minimax(int depth, int isMax, int alpha, int beta);
 void handle_player_move(int row, int col);
 void minimax_move();
 
+// ML function prototypes
+PossibilityLabel *allocatePossibility();
+Feature **allocateFeatureSet();
+void setup(char *array[]);
+void shuffle(char *array[]);
+char **randomizeData(char *array[][9]);
+void populateData(char *dataSet[], char *trainingSet[][9], char *testSet[][9], char *outcome[]);
+void learn(char *trainingSet[][9], char *outcome[], int rowSize);
+PossibilityLabel predict();
+const char *gameBoard_to_featureSet(int value);
+void free_memory();
+void naivebayes();
+void naivebayes_move();
+// void cross_validate(char *dataSet[], char *outcomes[], int dataSetSize, int folds);
+// void computeConfusionMatrix(char *outcome);
 /*
 gui.c functions
 create_mainwindow
