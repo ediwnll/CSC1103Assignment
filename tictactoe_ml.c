@@ -211,17 +211,37 @@ PossibilityLabel predict()
     return result;
 }
 
+PossibilityLabel* predictionValue(char* testData[][9]) {
+    PossibilityLabel* result = allocatePossibility();
+    result->positive=possibilityLabel->positive;
+    result->negative=possibilityLabel->negative;
+
+    for (int row=0; row<9; row++) {
+        for (int col=0; col<3; col++) {
+            if(stricmp(testData[row][col], possibilityAtt[row][col].position) == 0) {
+                result->positive *= possibilityAtt[row][col].possibility->positive;
+                result->negative *= possibilityAtt[row][col].possibility->negative;
+                break;
+            }
+
+        }
+    }
+    return result;
+}
+
+
+
 void computeConfusionMatrix(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize)
 {
     int truePositive = 0, trueNegative = 0, falsePositive = 0, falseNegative = 0;
 
     for (int row = 0; row < testSetSize; ++row)
     {
-        PossibilityLabel prediction = predict(testSet[row]); // Assuming you have a predict function that takes a row of the test set
+        PossibilityLabel* prediction = predictionValue(testSet); // Assuming you have a predict function that takes a row of the test set
 
         // Compare the predicted probabilities and assign the predicted label
         char predictedLabel[9];
-        if (prediction.positive > prediction.negative)
+        if (prediction->positive > prediction->negative)
         {
             strcpy(predictedLabel, "positive");
         }
@@ -250,7 +270,7 @@ void computeConfusionMatrix(char *testSet[][num_feature], char *actualOutcomes[]
     }
 
     // Print the confusion matrix
-    printf("Confusion Matrix:\n");
+    printf("\nConfusion Matrix:\n");
     printf("True Positive (TP): %d\n", truePositive);
     printf("True Negative (TN): %d\n", trueNegative);
     printf("False Positive (FP): %d\n", falsePositive);
@@ -263,11 +283,11 @@ double computeAccuracy(char *testSet[][num_feature], char *actualOutcomes[], int
 
     for (int row = 0; row < testSetSize; ++row)
     {
-        PossibilityLabel prediction = predict(testSet[row]); // Assuming you have a predict function that takes a row of the test set
+        PossibilityLabel* prediction = predictionValue(testSet); // Assuming you have a predict function that takes a row of the test set
 
         // Compare the predicted probabilities and assign the predicted label
         char predictedLabel[9];
-        if (prediction.positive > prediction.negative)
+        if (prediction->positive > prediction->negative)
         {
             strcpy(predictedLabel, "positive");
         }
@@ -347,8 +367,9 @@ void naivebayes()
 
     // Learn and evaluate on both training and test sets
     learn(trainingSet, outcome, trainingSetSize);
-
-    // free_memory();
+    computeConfusionMatrix(testSet,outcome,testSetSize);
+    double accuracy = computeAccuracy(testSet,outcome,testSetSize);
+    printf("%f",accuracy * 100);    
 }
 
 void naivebayes_move()

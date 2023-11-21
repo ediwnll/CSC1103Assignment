@@ -80,6 +80,7 @@ void shuffle(char *array[]);
 void populateData(char *dataSet[], char *trainingSet[][num_feature], char *testSet[][num_feature], char *outcome[]);
 void learn(char *trainingSet[][num_feature], char *outcome[], int rowSize);
 PossibilityLabel predict();
+PossibilityLabel* predictionValue(char* testData[][9]);
 char *gameBoard_to_featureSet(int value);
 void free_memory();
 void naivebayes();
