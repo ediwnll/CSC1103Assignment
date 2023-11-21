@@ -78,11 +78,6 @@
     0 0 4px #D30302;
 }
 
-#easy_button:hover + #difficultylabel{
-    color: green;
-    
-}
-
 #difficultylabel{
     font-size: 38px;
     font-family:'Comic Sans MS', 'Comic Sans', cursive;
