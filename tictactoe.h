@@ -23,8 +23,10 @@
 #define num_feature_sets 9
 #define num_feature 9
 
-// Number of games for winrate
+// Winrate Testing Definitions
 #define NUMGAME 20
+#define TEST_X 1
+#define TEST_O 0
 
 // Global Variables
 extern GtkWidget *mainwindow;
@@ -71,11 +73,11 @@ void back_button_clicked(GtkButton *button, gpointer user_data);
 int check_winner();
 void disable_game_buttons(); // disable all game buttons when game is over
 void create_difficultywindow();
-int minimax(int depth, int isMax, int alpha, int beta);
+int minimax(int depth, int isMax, int alpha, int beta, int isTesting);
 void handle_player_move(int row, int col);
-void minimax_move();
-void play_game_minimax_winrate(int algorithm1(), int algorithm2());
-void play_game_naive_winrate(int algorithm1(), int algorithm2());
+void minimax_move(int isTesting);
+void play_game_minimax_winrate();
+void play_game_naive_winrate();
 void play_multiple_games(int num_games);
 
 // ML function prototypes

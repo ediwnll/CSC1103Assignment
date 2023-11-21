@@ -1,41 +1,39 @@
 #include <stdlib.h>
 #include "tictactoe.h"
 
-void play_game_minimax_winrate(int algorithm1(), int algorithm2())
+void play_game_minimax_winrate()
 {
-    reset_game();
     int winner = 0;
 
     // Imperfect Minimax vs Perfect Minimax
     while (winner == 0)
     {
-        gamemode = EASY;
-        algorithm1(); // First player's move
+        gamemode = MEDIUM;
+        minimax_move(TEST_X); // First player's move
         winner = check_winner();
         if (winner != 0)
             break;
 
         // Set the game mode to the desired mode for the second player (algorithm2)
         gamemode = HARD;
-        algorithm2(); // Second player's move
+        minimax_move(TEST_O); // Second player's move
         winner = check_winner();
     }
     // Print the result of the game
 }
 
-void play_game_naive_winrate(int algorithm1(), int algorithm2())
+void play_game_naive_winrate()
 {
-    reset_game();
     int winner = 0;
     while (winner == 0)
     {
-        gamemode = MEDIUM;
-        algorithm1(); // First player's move
+        gamemode = EASY;
+        naivebayes_move(); // First player's move
         winner = check_winner();
         if (winner != 0)
             break;
         gamemode = HARD;
-        algorithm2();
+        minimax_move(TEST_O);
         winner = check_winner();
     }
 }
@@ -46,10 +44,11 @@ void play_multiple_games(int num_games)
     int contender = 0;
     int perfectminimax_win = 0;
     int draws = 0;
+    float winrate = 0.0;
 
     for (int i = 0; i < num_games; ++i)
     {
-        play_game(minimax_move, minimax_move);
+        play_game_minimax_winrate();
 
         // Update win counts based on the result
         int winner = check_winner();
@@ -65,14 +64,15 @@ void play_multiple_games(int num_games)
         {
             draws++;
         }
+        reset_game();
     }
     // Print win rate
-    printf("Perfect Minimax wins: %d\n", perfectminimax_win);
+    printf("\nPerfect Minimax wins: %d\n", perfectminimax_win);
     printf("Imperfect Minimax wins: %d\n", contender);
     printf("Draws: %d\n", draws);
-    int winrate = draws / num_games;
+    winrate = (float)draws / num_games * 100;
     printf("Due to the fact that Perfect Minimax cannot lose, we consider draws to be the winrate\n");
-    printf("Winrate: %d\n", winrate);
+    printf("Winrate: %.2f\n", winrate);
 
     contender = 0;
     perfectminimax_win = 0;
@@ -81,7 +81,7 @@ void play_multiple_games(int num_games)
 
     for (int i = 0; i < num_games; ++i)
     {
-        play_game(naivebayes_move, minimax_move);
+        play_game_naive_winrate();
 
         // Update win counts based on the result
         int winner = check_winner();
@@ -97,11 +97,12 @@ void play_multiple_games(int num_games)
         {
             draws++;
         }
+        reset_game();
     }
-    printf("Perfect Minimax wins: %d\n", perfectminimax_win);
-    printf("Naive Bayers wins: %d\n", contender);
+    printf("\nPerfect Minimax wins: %d\n", perfectminimax_win);
+    printf("Naive Bayes wins: %d\n", contender);
     printf("Draws: %d\n", draws);
-    int winrate = draws / num_games;
+    winrate = (float)draws / num_games * 100;
     printf("Due to the fact that Perfect Minimax cannot lose, we consider draws to be the winrate\n");
-    printf("Winrate: %d\n", winrate);
+    printf("Winrate: %.2f\n", winrate);
 }

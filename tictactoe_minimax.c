@@ -2,9 +2,10 @@
 #include "tictactoe.h"
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 // Minimax Algorithm
-int minimax(int depth, int isMax, int alpha, int beta)
+int minimax(int depth, int isMax, int alpha, int beta, int isTesting)
 {
     int score = check_winner();
     if (score == -1)
@@ -33,8 +34,15 @@ int minimax(int depth, int isMax, int alpha, int beta)
             {
                 if (gameBoard[row][col] == 0)
                 {
-                    gameBoard[row][col] = COMPUTER; // Assume AI made a move
-                    max_val = fmax(max_val, minimax(depth + 1, !isMax, alpha, beta));
+                    if (isTesting) // If testing win rate of the algorithm
+                    {
+                        gameBoard[row][col] = PLAYER; // Player will be the maximizer
+                    }
+                    else // Else run as per normal
+                    {
+                        gameBoard[row][col] = COMPUTER; // Assume AI makes a move
+                    }
+                    max_val = fmax(max_val, minimax(depth + 1, !isMax, alpha, beta, isTesting));
                     alpha = fmax(alpha, max_val);
                     gameBoard[row][col] = BLANK; // Undo move
 
@@ -56,8 +64,15 @@ int minimax(int depth, int isMax, int alpha, int beta)
             {
                 if (gameBoard[row][col] == 0)
                 {
-                    gameBoard[row][col] = PLAYER; // Assume player made a move
-                    min_val = fmin(min_val, minimax(depth + 1, !isMax, alpha, beta));
+                    if (isTesting) // If testing win rate of the algorithm
+                    {
+                        gameBoard[row][col] = COMPUTER; // Computer will be the minimizer
+                    }
+                    else // Else run as per normal
+                    {
+                        gameBoard[row][col] = PLAYER; // Assume Player makes a move
+                    }
+                    min_val = fmin(min_val, minimax(depth + 1, !isMax, alpha, beta, isTesting));
                     beta = fmin(beta, min_val);
                     gameBoard[row][col] = BLANK; // Undo move
                     if (beta <= alpha)
@@ -71,8 +86,10 @@ int minimax(int depth, int isMax, int alpha, int beta)
     }
 }
 
-void minimax_move()
+void minimax_move(int isTesting)
 {
+    // printf("%d\t", gamemode);
+    srand(time(NULL));
     int bestMove = -1;
     int bestVal = -1000;
     // loop through all cells
@@ -82,8 +99,15 @@ void minimax_move()
         {
             if (gameBoard[row][col] == BLANK)
             {
-                gameBoard[row][col] = COMPUTER; // Computer move
-                int moveVal = minimax(0, 0, -1000, 1000);
+                // if (isTesting) // If testing win rate of the algorithm
+                //{
+                //     gameBoard[row][col] = PLAYER; // Player will be the maximizer
+                // }
+                // else // Else run as per normal
+                //{
+                gameBoard[row][col] = COMPUTER; // Assume AI makes a move
+                //}
+                int moveVal = minimax(0, 0, -1000, 1000, isTesting);
                 gameBoard[row][col] = BLANK; // Clear the cell
                 if (moveVal > bestVal)
                 {
@@ -101,7 +125,7 @@ void minimax_move()
         if (gamemode == MEDIUM)
         {
             // Introduce randomness to make an imperfect move
-            if (rand() % 3 == 0)
+            if (rand() % 10 == 0)
             {
                 int randomMove;
                 do

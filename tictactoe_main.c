@@ -26,10 +26,10 @@ int main(int argc, char *argv[])
 
     // Initialise Naive-Bayes model
     naivebayes();
-    play_multiple_games(NUMGAME);
     create_mainwindow();
     create_gamewindow();
     create_difficultywindow();
+    play_multiple_games(NUMGAME);
     reset_game(); // Always run to reset the game
     // Start the GTK main loop
     gtk_main();
