@@ -29,7 +29,7 @@ void handle_grid_button(GtkButton *button, gpointer user_data)
     {
         handle_player_move(row, col);
     }
-    else if (gamemode == EASY || gamemode == HARD)
+    else if (gamemode == MEDIUM || gamemode == HARD)
     {
         handle_player_move(row, col);
         if (check_winner() == 0)
@@ -37,7 +37,7 @@ void handle_grid_button(GtkButton *button, gpointer user_data)
             minimax_move();
         }
     }
-    else if (gamemode == MEDIUM)
+    else if (gamemode == EASY)
     {
         handle_player_move(row, col);
         if (check_winner() == 0)

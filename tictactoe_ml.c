@@ -32,9 +32,9 @@ Feature **allocateFeatureSet()
         {
             featureSets[i][j].possibility = allocatePossibility();
         }
-        strcpy(featureSets[i][0].position, "o");
+        strcpy(featureSets[i][0].position, "b");
         strcpy(featureSets[i][1].position, "x");
-        strcpy(featureSets[i][2].position, "b");
+        strcpy(featureSets[i][2].position, "o");
     }
     return featureSets;
 }
@@ -69,13 +69,7 @@ void shuffle(char *array[])
     }
 }
 
-// char **randomizeData(char *array[][9])
-// {
-//     int random = rand() % (winStrategy * (20 / 100) - 1);
-//     return array[random];
-// }
-
-void populateData(char *dataSet[], char *trainingSet[][9], char *testSet[][9], char *outcome[])
+void populateData(char *dataSet[], char *trainingSet[][num_feature], char *testSet[][num_feature], char *outcome[])
 {
     int trainingRow = winStrategy * 0.8;
     int testRow = 0;
@@ -114,7 +108,7 @@ void populateData(char *dataSet[], char *trainingSet[][9], char *testSet[][9], c
     }
 }
 
-void learn(char *trainingSet[][9], char *outcome[], int rowSize)
+void learn(char *trainingSet[][num_feature], char *outcome[], int rowSize)
 {
     // training data row
     for (int trow = 0; trow < rowSize; trow++)
@@ -183,37 +177,116 @@ PossibilityLabel predict()
     {
         for (int col = 0; col < SIZE; ++col)
         {
-            const char *position_value = gameBoard_to_featureSet(gameBoard[row][col]);
+            // Skip if the cell is already occupied
+            if (gameBoard[row][col] != 0)
+            {
+                continue;
+            }
+            // Make a temporary move for evaluation
+            gameBoard[row][col] = COMPUTER;
+
+            char *position_value = gameBoard_to_featureSet(gameBoard[row][col]);
             for (int feature = 0; feature < num_feature; ++feature)
             {
-                if (strcasecmp(position_value, possibilityAtt[feature][0].position) == 0)
+                for (int feature_value = 0; feature_value < 3; ++feature_value)
                 {
-                    result.positive *= possibilityAtt[feature][0].possibility->positive;
-                    result.negative *= possibilityAtt[feature][0].possibility->negative;
-                    break;
-                }
-                else if (strcasecmp(position_value, possibilityAtt[feature][1].position) == 0)
-                {
-                    result.positive *= possibilityAtt[feature][1].possibility->positive;
-                    result.negative *= possibilityAtt[feature][1].possibility->negative;
-                    break;
-                }
-                else if (strcasecmp(position_value, possibilityAtt[feature][2].position) == 0)
-                {
-                    result.positive *= possibilityAtt[feature][2].possibility->positive;
-                    result.negative *= possibilityAtt[feature][2].possibility->negative;
-                    break;
+                    if (strcasecmp(position_value, possibilityAtt[feature][0].position) == 0)
+                    {
+                        result.positive *= possibilityAtt[feature][feature_value].possibility->positive;
+                        result.negative *= possibilityAtt[feature][feature_value].possibility->negative;
+                        break;
+                    }
                 }
             }
+
+            // Undo the temporary move
+            gameBoard[row][col] = BLANK;
         }
     }
+
+    printf("Intermediate Results - After Prediction:\n");
+    printf("Positive Probability: %f\n", result.positive);
+    printf("Negative Probability: %f\n", result.negative);
 
     return result;
 }
 
-// void cross_validate(char *dataSet[], int dataSetSize, float *accuracy, int folds)
-// {
-// }
+void computeConfusionMatrix(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize)
+{
+    int truePositive = 0, trueNegative = 0, falsePositive = 0, falseNegative = 0;
+
+    for (int row = 0; row < testSetSize; ++row)
+    {
+        PossibilityLabel prediction = predict(testSet[row]); // Assuming you have a predict function that takes a row of the test set
+
+        // Compare the predicted probabilities and assign the predicted label
+        char predictedLabel[9];
+        if (prediction.positive > prediction.negative)
+        {
+            strcpy(predictedLabel, "positive");
+        }
+        else
+        {
+            strcpy(predictedLabel, "negative");
+        }
+
+        // Compare the predicted label with the actual label and update the confusion matrix
+        if (strncmp(actualOutcomes[row], "positive", 8) == 0 && strncmp(predictedLabel, "positive", 8) == 0)
+        {
+            truePositive++;
+        }
+        else if (strncmp(actualOutcomes[row], "negative", 8) == 0 && strncmp(predictedLabel, "negative", 8) == 0)
+        {
+            trueNegative++;
+        }
+        else if (strncmp(actualOutcomes[row], "negative", 8) == 0 && strncmp(predictedLabel, "positive", 8) == 0)
+        {
+            falsePositive++;
+        }
+        else if (strncmp(actualOutcomes[row], "positive", 8) == 0 && strncmp(predictedLabel, "negative", 8) == 0)
+        {
+            falseNegative++;
+        }
+    }
+
+    // Print the confusion matrix
+    printf("Confusion Matrix:\n");
+    printf("True Positive (TP): %d\n", truePositive);
+    printf("True Negative (TN): %d\n", trueNegative);
+    printf("False Positive (FP): %d\n", falsePositive);
+    printf("False Negative (FN): %d\n", falseNegative);
+}
+
+double computeAccuracy(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize)
+{
+    int correctPredictions = 0;
+
+    for (int row = 0; row < testSetSize; ++row)
+    {
+        PossibilityLabel prediction = predict(testSet[row]); // Assuming you have a predict function that takes a row of the test set
+
+        // Compare the predicted probabilities and assign the predicted label
+        char predictedLabel[9];
+        if (prediction.positive > prediction.negative)
+        {
+            strcpy(predictedLabel, "positive");
+        }
+        else
+        {
+            strcpy(predictedLabel, "negative");
+        }
+
+        // Check if the predicted label matches the actual label
+        if (strncmp(actualOutcomes[row], predictedLabel, 8) == 0)
+        {
+            correctPredictions++;
+        }
+    }
+
+    // Calculate and return the accuracy
+    double accuracy = (double)correctPredictions / (double)testSetSize;
+    return accuracy;
+}
 
 void free_memory()
 {
@@ -240,15 +313,7 @@ void free_memory()
     free(possibilityLabel);
 }
 
-// void computeConfusionMatrix(char *outcome)
-// {
-//     int error = 1 / winStrategy;
-//     int TP, TN, FP, FN;
-
-//     // printf("True Positive: %d ,\n True Negative: %d ,\n False Positive: %d,\n False Negative :%d");
-// }
-
-const char *gameBoard_to_featureSet(int value)
+char *gameBoard_to_featureSet(int value)
 {
     switch (value)
     {
@@ -267,9 +332,10 @@ void naivebayes()
     srand(time(NULL));
     char *dataSet[winStrategy];
     int trainingSetSize = (winStrategy * 80 / 100);
+    int testSetSize = winStrategy - trainingSetSize;
 
-    char *trainingSet[trainingSetSize][9];
-    char *testSet[winStrategy - trainingSetSize][9];
+    char *trainingSet[trainingSetSize][num_feature];
+    char *testSet[testSetSize][num_feature];
     char *outcome[winStrategy];
 
     possibilityAtt = allocateFeatureSet();
@@ -278,14 +344,11 @@ void naivebayes()
     setup(dataSet);
     shuffle(dataSet);
     populateData(dataSet, trainingSet, testSet, outcome);
-    // char **randomData = randomizeData(trainingSet);
 
-    // Perform learning and prediction
+    // Learn and evaluate on both training and test sets
     learn(trainingSet, outcome, trainingSetSize);
 
-    // cross_validate();
-    // computeConfusionMatrix(outcome);
-    // free_memory(possibilityAtt, possibilityLabel);
+    // free_memory();
 }
 
 void naivebayes_move()
@@ -300,25 +363,17 @@ void naivebayes_move()
         {
             if (gameBoard[row][col] == BLANK)
             {
-                // Make a temporary move for evaluation
-                gameBoard[row][col] = COMPUTER;
-
                 // Use the Naive Bayes model to predict the outcome of this move
                 PossibilityLabel prediction = predict();
 
+                double moveProbability = prediction.negative;
                 // Compare the predicted probabilities
-                float winProbability = prediction.negative;
-                printf("%f\n", winProbability);
-                printf("%f\n", prediction.positive);
-                if (winProbability > bestProbability)
+                if (moveProbability > bestProbability)
                 {
-                    bestProbability = winProbability;
+                    bestProbability = moveProbability;
                     bestRow = row;
                     bestCol = col;
                 }
-
-                // Undo the temporary move
-                gameBoard[row][col] = BLANK;
             }
         }
     }

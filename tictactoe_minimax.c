@@ -80,7 +80,7 @@ void minimax_move()
     {
         for (int col = 0; col < SIZE; col++)
         {
-            if (gameBoard[row][col] == 0)
+            if (gameBoard[row][col] == BLANK)
             {
                 gameBoard[row][col] = COMPUTER; // Computer move
                 int moveVal = minimax(0, 0, -1000, 1000);
@@ -98,7 +98,7 @@ void minimax_move()
     {
         int computer_row = bestMove / SIZE;
         int computer_col = bestMove % SIZE;
-        if (gamemode == EASY)
+        if (gamemode == MEDIUM)
         {
             // Introduce randomness to make an imperfect move
             if (rand() % 3 == 0)

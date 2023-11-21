@@ -77,16 +77,15 @@ PossibilityLabel *allocatePossibility();
 Feature **allocateFeatureSet();
 void setup(char *array[]);
 void shuffle(char *array[]);
-char **randomizeData(char *array[][9]);
-void populateData(char *dataSet[], char *trainingSet[][9], char *testSet[][9], char *outcome[]);
-void learn(char *trainingSet[][9], char *outcome[], int rowSize);
+void populateData(char *dataSet[], char *trainingSet[][num_feature], char *testSet[][num_feature], char *outcome[]);
+void learn(char *trainingSet[][num_feature], char *outcome[], int rowSize);
 PossibilityLabel predict();
-const char *gameBoard_to_featureSet(int value);
+char *gameBoard_to_featureSet(int value);
 void free_memory();
 void naivebayes();
 void naivebayes_move();
-// void cross_validate(char *dataSet[], char *outcomes[], int dataSetSize, int folds);
-// void computeConfusionMatrix(char *outcome);
+void computeConfusionMatrix(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize);
+double computeAccuracy(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize);
 /*
 gui.c functions
 create_mainwindow
