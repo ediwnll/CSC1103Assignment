@@ -74,6 +74,9 @@ void create_difficultywindow();
 int minimax(int depth, int isMax, int alpha, int beta);
 void handle_player_move(int row, int col);
 void minimax_move();
+void play_game_minimax_winrate(int algorithm1(), int algorithm2());
+void play_game_naive_winrate(int algorithm1(), int algorithm2());
+void play_multiple_games(int num_games);
 
 // ML function prototypes
 PossibilityLabel *allocatePossibility();
@@ -83,7 +86,7 @@ void shuffle(char *array[]);
 void populateData(char *dataSet[], char *trainingSet[][num_feature], char *testSet[][num_feature], char *outcome[]);
 void learn(char *trainingSet[][num_feature], char *outcome[], int rowSize);
 PossibilityLabel predict();
-PossibilityLabel* predictionValue(char* testData[][9]);
+PossibilityLabel *predictionValue(char *testData[][9]);
 char *gameBoard_to_featureSet(int value);
 void free_memory();
 void naivebayes();
