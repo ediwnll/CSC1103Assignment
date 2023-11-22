@@ -19,7 +19,8 @@
 
 // ML Definitions
 #define winStrategy 958
-#define maxCol 10
+#define maxCol 9
+#define label_size 9
 #define num_feature_sets 9
 #define num_feature 9
 
@@ -57,8 +58,16 @@ typedef struct
     char position[2];
     PossibilityLabel *possibility;
 } Feature;
+typedef struct
+{
+    char features[num_feature][maxCol - 1]; // Features (excluding label)
+    char label[label_size];                 // Label
+} DataInstance;
 extern Feature **possibilityAtt;
 extern PossibilityLabel *possibilityLabel;
+extern DataInstance *dataSet;
+extern DataInstance *trainingSet;
+extern DataInstance *testSet;
 
 // function prototypes
 void create_mainwindow();                                               // creates the main window
@@ -83,18 +92,17 @@ void play_multiple_games(int num_games);
 // ML function prototypes
 PossibilityLabel *allocatePossibility();
 Feature **allocateFeatureSet();
-void setup(char *array[]);
-void shuffle(char *array[]);
-void populateData(char *dataSet[], char *trainingSet[][num_feature], char *testSet[][num_feature], char *outcome[]);
-void learn(char *trainingSet[][num_feature], char *outcome[], int rowSize);
-PossibilityLabel predict();
-PossibilityLabel *predictionValue(char *testData[][9]);
-char *gameBoard_to_featureSet(int value);
+void setup(DataInstance *array);
+void shuffle(DataInstance *array);
+void populateData(DataInstance *dataSet, DataInstance *trainingSet, DataInstance *testSet, int dataSize, int trainingSize);
+void learn(DataInstance *trainingSet, int rowSize);
+PossibilityLabel predict(DataInstance *testSet);
+void fill_features_from_board(DataInstance *dataInstance);
 void free_memory();
 void naivebayes();
 void naivebayes_move();
-void computeConfusionMatrix(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize);
-double computeAccuracy(char *testSet[][num_feature], char *actualOutcomes[], int testSetSize);
+void computeConfusionMatrix(DataInstance *testSet, int testSetSize);
+double computeAccuracy(DataInstance *testSet, int testSetSize);
 /*
 gui.c functions
 create_mainwindow
