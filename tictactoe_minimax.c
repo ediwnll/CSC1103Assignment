@@ -126,8 +126,10 @@ void minimax_move(int isTesting)
                 {
                     gameBoard[row][col] = PLAYER; // Testing: Player will be the maximizer
                 }
-
-                gameBoard[row][col] = COMPUTER; // Assume AI makes a move
+                else
+                {
+                    gameBoard[row][col] = COMPUTER; // Assume AI makes a move
+                }
 
                 // Evaluate the move using the minimax algorithm
                 int moveVal = minimax(0, 0, -1000, 1000, isTesting);
