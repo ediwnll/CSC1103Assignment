@@ -10,6 +10,7 @@ RM = rm -f
 
 ifeq ($(OS),Windows_NT)
     TARGET_EXTENSION = .exe
+	RM = del /Q
 else
     TARGET_EXTENSION =
 endif
