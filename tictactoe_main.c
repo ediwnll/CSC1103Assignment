@@ -20,19 +20,17 @@ int gameBoard[SIZE][SIZE];
 int main(int argc, char *argv[])
 {
 
-    gtk_init(&argc, &argv);
-    g_print("Current working directory: %s\n", g_get_current_dir());
-    load_css("style.css");
+    gtk_init(&argc, &argv); // Initialise GTK for the GUI
+    // g_print("Current working directory: %s\n", g_get_current_dir());
+    load_css("style.css"); // Load the style sheet (design for the GUI)
 
-    // Initialise Naive-Bayes model
-    naivebayes();
-    create_mainwindow();
-    create_gamewindow();
-    create_difficultywindow();
-    play_multiple_games(NUMGAME);
-    reset_game(); // Always run to reset the game
-    // Start the GTK main loop
-    gtk_main();
+    naivebayes();                 // Initialise learning of Naive-Bayes model
+    create_mainwindow();          // Create Main Window
+    create_gamewindow();          // Create Game Window
+    create_difficultywindow();    // Create Difficulty Window
+    play_multiple_games(NUMGAME); // Test the win rate of the different difficulties by a set number of games
+    reset_game();                 // Always run to reset the game
+    gtk_main();                   // Start the GTK main loop
 
     return 0;
 }

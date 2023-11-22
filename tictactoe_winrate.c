@@ -25,6 +25,8 @@ void play_game_minimax_winrate()
 void play_game_naive_winrate()
 {
     int winner = 0;
+
+    // Naive-Bayes Classifier vs Perfect Minimax
     while (winner == 0)
     {
         gamemode = EASY;

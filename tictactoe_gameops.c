@@ -20,10 +20,8 @@ void reset_game()
 void handle_grid_button(GtkButton *button, gpointer user_data)
 {
     int position = GPOINTER_TO_INT(user_data);
-    // printf("position: %d\n", position);
     int row = position / SIZE;
     int col = position % SIZE;
-    // printf("row: %d, col: %d\n", row, col);
 
     if (gamemode == TWOPLAYERS)
     {
