@@ -102,6 +102,6 @@ PossibilityLabel predict(DataInstance *testSet);
 void fill_features_from_board(DataInstance *dataInstance);
 void free_memory();
 void naivebayes();
-void naivebayes_move();
+void naivebayes_move(int isTesting);
 void computeConfusionMatrix(DataInstance *testSet, int testSetSize);
 double computeAccuracy(DataInstance *testSet, int testSetSize);

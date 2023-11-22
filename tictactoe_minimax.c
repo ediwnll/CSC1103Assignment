@@ -148,8 +148,8 @@ void minimax_move(int isTesting)
     if (bestMove != -1)
     {
         // Convert best move value to row and column
-        int computer_row = bestMove / SIZE;
-        int computer_col = bestMove % SIZE;
+        int bestRow = bestMove / SIZE;
+        int bestCol = bestMove % SIZE;
 
         // If game mode is medium
         if (gamemode == MEDIUM)
@@ -166,12 +166,12 @@ void minimax_move(int isTesting)
                 } while (gameBoard[randomMove / SIZE][randomMove % SIZE] != 0);
 
                 // Convert the random move index to row and column
-                computer_row = randomMove / SIZE;
-                computer_col = randomMove % SIZE;
+                bestRow = randomMove / SIZE;
+                bestCol = randomMove % SIZE;
             }
         }
 
         // Make the best move according to the minimax algorithm
-        handle_player_move(computer_row, computer_col);
+        handle_player_move(bestRow, bestCol);
     }
 }

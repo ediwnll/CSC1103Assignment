@@ -40,7 +40,7 @@ void handle_grid_button(GtkButton *button, gpointer user_data)
         handle_player_move(row, col);
         if (check_winner() == 0)
         {
-            naivebayes_move();
+            naivebayes_move(TEST_O);
         }
     }
 }
@@ -61,7 +61,7 @@ void update_game_grid()
             gtk_style_context_remove_class(context, "x_button");
             gtk_style_context_remove_class(context, "o_button");
 
-            if (gameBoard[i][j] == 1)
+            if (gameBoard[i][j] == PLAYER)
             {
                 gtk_button_set_label(GTK_BUTTON(button), "X");
                 gtk_widget_set_sensitive(button, FALSE);
@@ -69,7 +69,7 @@ void update_game_grid()
                 GtkStyleContext *context = gtk_widget_get_style_context(button);
                 gtk_style_context_add_class(context, "x_button");
             }
-            else if (gameBoard[i][j] == 2)
+            else if (gameBoard[i][j] == COMPUTER)
             {
                 gtk_button_set_label(GTK_BUTTON(button), "O");
                 gtk_widget_set_sensitive(button, FALSE);

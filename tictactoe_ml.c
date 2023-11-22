@@ -148,15 +148,15 @@ void learn(DataInstance *trainingSet, int rowSize)
         }
     }
 
-    for (int tts = 0; tts < 9; tts++)
-    {
-        Feature *feature = possibilityAtt[tts];
-        for (int col = 0; col < 3; col++)
-        {
-            printf("%s -> %f, %f...", feature[col].position, feature[col].possibility->positive, feature[col].possibility->negative);
-        }
-        printf("\n");
-    }
+    // for (int tts = 0; tts < 9; tts++)
+    // {
+    //     Feature *feature = possibilityAtt[tts];
+    //     for (int col = 0; col < 3; col++)
+    //     {
+    //         printf("%s -> %f, %f...", feature[col].position, feature[col].possibility->positive, feature[col].possibility->negative);
+    //     }
+    //     printf("\n");
+    // }
 
     possibilityLabel->positive /= rowSize;
     possibilityLabel->negative /= rowSize;
@@ -175,7 +175,7 @@ PossibilityLabel predict(DataInstance *testData)
             if (gameBoard[row][col] == BLANK)
             {
                 // Make a temporary move for evaluation
-                gameBoard[row][col] = COMPUTER;
+                // gameBoard[row][col] = COMPUTER;
 
                 // Use the Naive Bayes model to update probabilities
                 for (int feature = 0; feature < num_feature; ++feature)
@@ -192,7 +192,7 @@ PossibilityLabel predict(DataInstance *testData)
                 }
 
                 // Undo the temporary move
-                gameBoard[row][col] = BLANK;
+                // gameBoard[row][col] = BLANK;
             }
         }
     }
@@ -360,10 +360,11 @@ void naivebayes()
     // free(testSet);
 }
 
-void naivebayes_move()
+void naivebayes_move(int isTesting)
 {
     int bestRow = -1, bestCol = -1;
     double bestProbability = -1.0;
+    double moveProbability = 0.0;
 
     // Iterate through empty spaces on the board and evaluate each move
     for (int row = 0; row < SIZE; ++row)
@@ -373,7 +374,14 @@ void naivebayes_move()
             if (gameBoard[row][col] == BLANK)
             {
                 // Make a temporary move for evaluation
-                gameBoard[row][col] = COMPUTER;
+                if (isTesting)
+                {
+                    gameBoard[row][col] = PLAYER; // TESTING: Make player move
+                }
+                else
+                {
+                    gameBoard[row][col] = COMPUTER;
+                }
 
                 // Create a data instance representing the current board state
                 DataInstance currentBoardState;
@@ -386,7 +394,14 @@ void naivebayes_move()
                 // Undo the temporary move
                 gameBoard[row][col] = BLANK;
 
-                double moveProbability = prediction.negative;
+                if (isTesting)
+                {
+                    moveProbability = prediction.positive;
+                }
+                else
+                {
+                    moveProbability = prediction.negative;
+                }
                 // Compare the predicted probabilities
                 if (moveProbability > bestProbability)
                 {

@@ -30,11 +30,11 @@ void play_game_naive_winrate()
     while (winner == 0)
     {
         gamemode = EASY;
-        naivebayes_move(); // First player's move
+        naivebayes_move(TEST_X); // First player's move
         winner = check_winner();
         if (winner != 0)
             break;
-        gamemode = HARD;
+        gamemode = EASY;
         minimax_move(TEST_O);
         winner = check_winner();
     }
@@ -54,11 +54,11 @@ void play_multiple_games(int num_games)
 
         // Update win counts based on the result
         int winner = check_winner();
-        if (winner == 1)
+        if (winner == PLAYER)
         {
             contender++;
         }
-        else if (winner == 2)
+        else if (winner == COMPUTER)
         {
             perfectminimax_win++;
         }
@@ -87,11 +87,11 @@ void play_multiple_games(int num_games)
 
         // Update win counts based on the result
         int winner = check_winner();
-        if (winner == 1)
+        if (winner == PLAYER)
         {
             contender++;
         }
-        else if (winner == 2)
+        else if (winner == COMPUTER)
         {
             perfectminimax_win++;
         }
