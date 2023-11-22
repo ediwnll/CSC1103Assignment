@@ -5,31 +5,30 @@
 #include <time.h>
 #include <gtk/gtk.h>
 
+/* DEFINITIONS */
 // Board Definitions
 #define SIZE 3
 #define PLAYER 1
 #define COMPUTER 2
 #define BLANK 0
-
-// Difficulty definitions
+// Difficulty
 #define TWOPLAYERS 1
 #define EASY 2
 #define MEDIUM 3
 #define HARD 4
-
-// ML Definitions
+// Machine Learning
 #define winStrategy 958
 #define maxCol 9
 #define label_size 9
 #define num_feature_sets 9
 #define num_feature 9
-
-// Winrate Testing Definitions
+// Win Rate Testing
 #define NUMGAME 20
 #define TEST_X 1
 #define TEST_O 0
 
-// Global Variables
+/*GLOBAL VARIABLES */
+// GUI
 extern GtkWidget *mainwindow;
 extern GtkWidget *gamewindow;
 extern GtkWidget *difficultywindow;
@@ -42,12 +41,11 @@ extern GtkWidget *gamelabel;
 extern GtkWidget *gamemodelabel;
 extern GtkWidget *difficultylabel;
 extern GtkWidget *gameGrid[SIZE][SIZE]; // the buttons for tic tac toe
+// Game Board
 extern int gamemode;
 extern int currentPlayer;
 extern int gameBoard[SIZE][SIZE];
-void load_css(const char *path); // css
-
-// ML Variables
+// Naive-Bayes Classifier
 typedef struct
 {
     double positive;
@@ -69,7 +67,8 @@ extern DataInstance *dataSet;
 extern DataInstance *trainingSet;
 extern DataInstance *testSet;
 
-// function prototypes
+/* FUNCTION PROTOTYPES */
+// GUI function prototypes
 void create_mainwindow();                                               // creates the main window
 void create_gamewindow();                                               // creates the game window for tictactoe
 void two_players_button_clicked(GtkButton *button, gpointer user_data); // main window two player button clicked
@@ -79,17 +78,20 @@ void reset_game();                                                      // set g
 void handle_grid_button(GtkButton *button, gpointer user_data);         // allows the grid button to change label to X or O base on current player
 void update_game_grid();
 void back_button_clicked(GtkButton *button, gpointer user_data);
-int check_winner();
 void disable_game_buttons(); // disable all game buttons when game is over
 void create_difficultywindow();
-int minimax(int depth, int isMax, int alpha, int beta, int isTesting);
+void load_css(const char *path); // css
+// Game Operations
+int check_winner();
 void handle_player_move(int row, int col);
+// Minimax Algorithm
+int minimax(int depth, int isMax, int alpha, int beta, int isTesting);
 void minimax_move(int isTesting);
+// Win Rate Testing
 void play_game_minimax_winrate();
 void play_game_naive_winrate();
 void play_multiple_games(int num_games);
-
-// ML function prototypes
+// Naive-Bayes Classifier
 PossibilityLabel *allocatePossibility();
 Feature **allocateFeatureSet();
 void setup(DataInstance *array);
@@ -103,28 +105,3 @@ void naivebayes();
 void naivebayes_move();
 void computeConfusionMatrix(DataInstance *testSet, int testSetSize);
 double computeAccuracy(DataInstance *testSet, int testSetSize);
-/*
-gui.c functions
-create_mainwindow
-create_gamewindow
-create_difficultywindow
-difficulty_button_clicked
-oneplayer_button_clicked
-two player button click
-backbutton clicked
-
-gameoperation functions
-resetgame
-handlegridbutton
-updategamegrid
-checkwinner
-disablegamebutton
-
-tictactoetwoplayer function
-handleplayermove
-
-tictactoe singleplayer
-handlecomputermove
-minimax
-
-*/
