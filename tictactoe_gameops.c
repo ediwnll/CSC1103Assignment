@@ -19,27 +19,34 @@ void reset_game()
 
 void handle_grid_button(GtkButton *button, gpointer user_data)
 {
+    // gets the number from the button state
     int position = GPOINTER_TO_INT(user_data);
     int row = position / SIZE;
     int col = position % SIZE;
 
+    // if it is two players, we only need to let players do the move
     if (gamemode == TWOPLAYERS)
     {
+        // calls the function where it will update the board base on how the player moves
         handle_player_move(row, col);
     }
+    // else if game mode is medium or hard, we let player do the move and computer reply back with their algorithm function
     else if (gamemode == MEDIUM || gamemode == HARD)
     {
         handle_player_move(row, col);
         if (check_winner() == 0)
         {
+            // minimax to make the computer move
             minimax_move(TEST_O);
         }
     }
+    // else if game mode is easy, we let player do the move and computer will reply back with a algorith move from naive bayes
     else if (gamemode == EASY)
     {
         handle_player_move(row, col);
         if (check_winner() == 0)
         {
+            // naive bayes classifier to make the computer move
             naivebayes_move(TEST_O);
         }
     }
