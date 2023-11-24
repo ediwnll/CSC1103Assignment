@@ -76,21 +76,21 @@ void one_player_button_clicked(GtkButton *button, gpointer user_data);  // main 
 void difficulty_button_clicked(GtkWidget *button, gpointer user_data);  // singleplayer window choose difficulty
 void reset_game();                                                      // set gameBoard to empty and current player back to X
 void handle_grid_button(GtkButton *button, gpointer user_data);         // allows the grid button to change label to X or O base on current player
-void update_game_grid();
-void back_button_clicked(GtkButton *button, gpointer user_data);
-void disable_game_buttons(); // disable all game buttons when game is over
-void create_difficultywindow();
-void load_css(const char *path); // css
+void update_game_grid();                                                // updates the game grid based on current player symbol
+void back_button_clicked(GtkButton *button, gpointer user_data);        // brings user back to main window if back button is clicked
+void disable_game_buttons();                                            // disable all game buttons when game is over
+void create_difficultywindow();                                         // creates the difficulty window
+void load_css(const char *path);                                        // css
 // Game Operations
-int check_winner();
-void handle_player_move(int row, int col);
+int check_winner();                        // check for any end game conditions
+void handle_player_move(int row, int col); // function to handle player move
 // Minimax Algorithm
-int minimax(int depth, int isMax, int alpha, int beta, int isTesting);
-void minimax_move(int isTesting);
+int minimax(int depth, int isMax, int alpha, int beta, int isTesting); // Minimax Algorithm
+void minimax_move(int isTesting);                                      // function to make optimal move for the computer
 // Win Rate Testing
-void play_game_minimax_winrate();
-void play_game_naive_winrate();
-void play_multiple_games(int num_games);
+void play_game_minimax_winrate();        // function to test win rate of imperfect minimax vs perfect minimax
+void play_game_naive_winrate();          // function to test win rate of Naive-Bayes classifier vs perfect minimax
+void play_multiple_games(int num_games); // function to simulate tictactoe games based on number specified
 // Naive-Bayes Classifier
 PossibilityLabel *allocatePossibility();
 Feature **allocateFeatureSet();
@@ -100,7 +100,6 @@ void populateData(DataInstance *dataSet, DataInstance *trainingSet, DataInstance
 void learn(DataInstance *trainingSet, int rowSize);
 PossibilityLabel predict(DataInstance *testSet);
 void fill_features_from_board(DataInstance *dataInstance);
-void free_memory();
 void naivebayes();
 void naivebayes_move(int isTesting);
 void computeConfusionMatrix(DataInstance *testSet, int testSetSize);

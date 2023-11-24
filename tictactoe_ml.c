@@ -78,21 +78,28 @@ void setup(DataInstance *array)
     fclose(MLfile);
 }
 
+// function to shuffle the dataset
 void shuffle(DataInstance *array)
 {
     for (int i = 0; i < winStrategy - 1; i++)
     {
+        // generate a random index within current range
         int j = rand() % (i + 1);
+
+        // swap the current element with a randomly chosen element
         DataInstance temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
 }
 
+// function to split the dataset into train and test data
 void populateData(DataInstance *dataSet, DataInstance *trainingSet, DataInstance *testSet, int dataSize, int trainingSize)
 {
+    // iterate through all rows of data
     for (int row = 0; row < dataSize; row++)
     {
+
         if (row < trainingSize)
         {
             memcpy(&trainingSet[row], &dataSet[row], sizeof(DataInstance));
@@ -109,6 +116,7 @@ void learn(DataInstance *trainingSet, int rowSize)
     // training data row
     for (int trow = 0; trow < rowSize; trow++)
     {
+        // update counts for positive and negative labels
         if (strncmp(trainingSet[trow].label, "positive", 8) == 0)
         {
             possibilityLabel->positive += 1;
@@ -118,12 +126,15 @@ void learn(DataInstance *trainingSet, int rowSize)
             possibilityLabel->negative += 1;
         }
 
+        // update feature probabilities based on the training set
         for (int ttrow = 0; ttrow < num_feature; ttrow++)
         {
             for (int col = 0; col < 3; col++)
             {
+                // check if the current feature value matches the current position in possibilityAtt
                 if (strcasecmp(trainingSet[trow].features[ttrow], possibilityAtt[ttrow][col].position) == 0)
                 {
+                    // update counts based on the label for current feature value
                     if (strncmp(trainingSet[trow].label, "positive", 8) == 0)
                     {
                         possibilityAtt[ttrow][col].possibility->positive += 1;
@@ -138,6 +149,7 @@ void learn(DataInstance *trainingSet, int rowSize)
         }
     }
 
+    // normalize feature probabilities by dividing the total counts for each feature
     for (int tts = 0; tts < 9; tts++)
     {
         Feature *feature = possibilityAtt[tts];
@@ -148,16 +160,7 @@ void learn(DataInstance *trainingSet, int rowSize)
         }
     }
 
-    // for (int tts = 0; tts < 9; tts++)
-    // {
-    //     Feature *feature = possibilityAtt[tts];
-    //     for (int col = 0; col < 3; col++)
-    //     {
-    //         printf("%s -> %f, %f...", feature[col].position, feature[col].possibility->positive, feature[col].possibility->negative);
-    //     }
-    //     printf("\n");
-    // }
-
+    // Normalize label probabilities by dividing by the total number of rows in the training set
     possibilityLabel->positive /= rowSize;
     possibilityLabel->negative /= rowSize;
 }
@@ -174,9 +177,6 @@ PossibilityLabel predict(DataInstance *testData)
         {
             if (gameBoard[row][col] == BLANK)
             {
-                // Make a temporary move for evaluation
-                // gameBoard[row][col] = COMPUTER;
-
                 // Use the Naive Bayes model to update probabilities
                 for (int feature = 0; feature < num_feature; ++feature)
                 {
@@ -190,9 +190,6 @@ PossibilityLabel predict(DataInstance *testData)
                         }
                     }
                 }
-
-                // Undo the temporary move
-                // gameBoard[row][col] = BLANK;
             }
         }
     }
@@ -276,50 +273,29 @@ double computeAccuracy(DataInstance *testSet, int testSetSize)
     return accuracy;
 }
 
-void free_memory()
-{
-    if (possibilityAtt == NULL)
-    {
-        return;
-    }
-
-    for (int i = 0; i < num_feature_sets; i++)
-    {
-        if (possibilityAtt[i] == NULL)
-        {
-            continue;
-        }
-
-        for (int j = 0; j < num_feature; j++)
-        {
-            free(possibilityAtt[i][j].possibility);
-        }
-        free(possibilityAtt[i]);
-    }
-
-    free(possibilityAtt);
-    free(possibilityLabel);
-}
-
 void fill_features_from_board(DataInstance *dataInstance)
 {
+    // Iterate through each cell in the game board
     for (int row = 0; row < SIZE; ++row)
     {
         for (int col = 0; col < SIZE; ++col)
         {
+            // Switch based on the content of the current cell in the game board
             switch (gameBoard[row][col])
             {
             case BLANK:
+                // If the cell is blank, set the corresponding feature to "b"
                 strcpy(dataInstance->features[row * SIZE + col], "b");
                 break;
             case PLAYER:
+                // If the cell is occupied by the player, set the corresponding feature to "x"
                 strcpy(dataInstance->features[row * SIZE + col], "x");
                 break;
             case COMPUTER:
+                // If the cell is occupied by the computer, set the corresponding feature to "o"
                 strcpy(dataInstance->features[row * SIZE + col], "o");
                 break;
             default:
-                // Handle other cases if needed
                 break;
             }
         }
@@ -330,8 +306,8 @@ void naivebayes()
 {
     srand(time(NULL));
     dataSet = (DataInstance *)malloc(winStrategy * sizeof(DataInstance));
-    int trainingSetSize = (winStrategy * 80 / 100);
-    int testSetSize = winStrategy - trainingSetSize;
+    int trainingSetSize = (winStrategy * 80 / 100);  // training set 80% of dataset
+    int testSetSize = winStrategy - trainingSetSize; // test set is the remaining 20%
 
     trainingSet = (DataInstance *)malloc(trainingSetSize * sizeof(DataInstance));
     testSet = (DataInstance *)malloc(testSetSize * sizeof(DataInstance));
