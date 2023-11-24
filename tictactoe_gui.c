@@ -60,6 +60,7 @@ void create_mainwindow()
 
 void create_gamewindow()
 {
+    // Create the main window
     gamewindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(gamewindow), "Tic Tac Toe");
     gtk_window_set_default_size(GTK_WINDOW(gamewindow), 500, 500);
@@ -89,8 +90,6 @@ void create_gamewindow()
 
     gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
-    // gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
-    // gtk_grid_set_column_spacing(GTK_GRID(grid), 10);
 
     // add back button to gamewindow
     // add back button to the top-left corner of the screen
@@ -103,6 +102,7 @@ void create_gamewindow()
     // add grid to gameVbox
     gtk_box_pack_start(GTK_BOX(gameVBox), grid, TRUE, TRUE, 0);
 
+    // create gamegrid for the buttons
     for (int row = 0; row < 3; row++)
     {
         for (int col = 0; col < 3; col++)
@@ -112,7 +112,6 @@ void create_gamewindow()
             gtk_widget_set_name(gameGrid[row][col], "grid-button");
             gtk_grid_attach(GTK_GRID(grid), gameGrid[row][col], col, row, 1, 1);
             g_signal_connect(gameGrid[row][col], "clicked", G_CALLBACK(handle_grid_button), GINT_TO_POINTER(row * 3 + col));
-            // g_print("Button at row %d, col %d has ID: %s\n", row, col, button_id);
         }
     }
     gtk_window_set_position(GTK_WINDOW(gamewindow), GTK_WIN_POS_CENTER);
@@ -123,6 +122,7 @@ void create_gamewindow()
 
 void create_difficultywindow()
 {
+    // Create the difficulty window
     difficultywindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(difficultywindow), "Select Difficulty");
     gtk_window_set_default_size(GTK_WINDOW(difficultywindow), 500, 500);
@@ -197,7 +197,6 @@ void difficulty_button_clicked(GtkWidget *button, gpointer user_data)
     {
         gamemode = EASY;
         gtk_label_set_text(GTK_LABEL(gamemodelabel), "You chose Easy difficulty");
-        // printf("gamemode = %d\n", gamemode);
     }
     else if (button == mediumbutton)
     {
@@ -211,22 +210,28 @@ void difficulty_button_clicked(GtkWidget *button, gpointer user_data)
     }
 }
 
+// Single player button clicked
 void one_player_button_clicked(GtkButton *button, gpointer user_data)
 {
+    // switch to difficulty window
     gtk_widget_hide(mainwindow);
     gtk_widget_show(difficultywindow);
 }
 
+// Two player button clicked
 void two_players_button_clicked(GtkButton *button, gpointer user_data)
 {
+    // switch to gamemode and set gamemode to twoplayers
     gtk_widget_hide(mainwindow);
     gtk_widget_show(gamewindow);
     gtk_label_set_text(GTK_LABEL(gamemodelabel), "Two Players");
     gamemode = TWOPLAYERS;
 }
 
+// Back button clicked
 void back_button_clicked(GtkButton *button, gpointer user_data)
 {
+    // Reset entire game, head over to main window, change gamemode to 0
     gtk_widget_hide(gamewindow);
     gtk_widget_hide(difficultywindow);
     gtk_widget_show(mainwindow);
@@ -235,6 +240,7 @@ void back_button_clicked(GtkButton *button, gpointer user_data)
     gtk_label_set_text(GTK_LABEL(gamemodelabel), "Game Label");
 }
 
+// Load in css from style.css file
 void load_css(const char *path)
 {
     GtkCssProvider *provider = gtk_css_provider_new();
@@ -242,6 +248,7 @@ void load_css(const char *path)
     GdkScreen *screen = gdk_display_get_default_screen(display);
 
     gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    // If error, print out error in terminal
     GError *error = NULL;
     gtk_css_provider_load_from_file(provider, g_file_new_for_path(path), &error);
     if (error != NULL)
